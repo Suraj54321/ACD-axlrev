@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Agent Login</title>
+    <script src="https://media.twiliocdn.com/sdk/js/client/v1.11/twilio.min.js"></script>
+</head>
+<body>
+    <h1>Agent Login</h1>
+    <form id="login-form">
+        <label for="agentId">Agent ID:</label>
+        <input type="text" id="agentId" name="agentId" required>
+        <button type="submit">Login</button>
+    </form>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const agentId = document.getElementById('agentId').value;
+            
+            fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ agentId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                localStorage.setItem('twilioToken', data.token);
+                localStorage.setItem('agentId', agentId);
+                window.location.href = 'http://localhost:3000/agent';
+            })
+            .catch(error => console.error('Error logging in:', error));
+        });
+    </script>
+</body>
+</html>
